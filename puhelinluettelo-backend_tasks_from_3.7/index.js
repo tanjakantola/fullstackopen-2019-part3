@@ -10,7 +10,7 @@ app.use(bodyParser.json())
 app.use(cors())
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body '))
-
+/* 
 let persons = [
   {
   "name": "Arto Hellas",
@@ -37,17 +37,19 @@ let persons = [
   "number": "12345678",
   "id": 6
   }
-]
+] */
 
 app.use(express.static('build'))
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>')
+app.get('/', (request, response) => {
+  response.send('<h1>Hello World!</h1>')
 })
 
-app.get('/info', (req, res) => {
-  const timestamp = new Date()
-  res.send(`Phonebook has info for  ${persons.length} persons <br />${timestamp}`)
+app.get('/info', (request, response) => {
+  Person.find().then(persons => {
+    const timestamp = new Date()
+    response.send(`Phonebook has info for ${persons.length} persons<br />${timestamp}`)
+  })
 })
 
 app.post('/api/persons', (request, response, next) => {
