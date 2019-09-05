@@ -10,34 +10,6 @@ app.use(bodyParser.json())
 app.use(cors())
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body '))
-/* 
-let persons = [
-  {
-  "name": "Arto Hellas",
-  "number": "040-123456",
-  "id": 1
-  },
-  {
-  "name": "Ada Lovelace",
-  "number": "39-44-5323523",
-  "id": 2
-  },
-  {
-  "name": "Dan Abramov",
-  "number": "12-43-234345",
-  "id": 3
-  },
-  {
-  "name": "Mary Poppendieck",
-  "number": "39-23-6423122",
-  "id": 4
-  },
-  {
-  "name": "Matti Virtanen",
-  "number": "12345678",
-  "id": 6
-  }
-] */
 
 app.use(express.static('build'))
 
@@ -54,42 +26,11 @@ app.get('/info', (request, response) => {
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-  
-  if (!body.number) {
-    return response.status(500).json({ 
-      error: 'Number is missing' 
-    })
-  }
-
-  if (!body.name) {
-      return response.status(500).json({ 
-        error: 'Name is missing' 
-      })
-    }
-
-  if (persons.find(person => person.name === body.name)) {
-      return response.status(500).json({
-        error: 'Name must be unique' });
-  }
-
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-    id: generateId()
-  })
-
-  person
-    .save()
-    .then(savedPerson => savedPerson.toJSON())
-    .then(savedAndFormattedPerson => {
-      response.json(savedAndFormattedPerson)
-    })
+  const person = new Person({ name: body.name, number: body.number })
+  person.save()
+    .then(savedPerson => response.json(savedPerson))
     .catch(error => next(error))
-}) 
-
-const generateId = () => {
-  return Math.floor(Math.random() * 5000);
-}
+})
 
 app.get('/api/persons', (request, response) => {
   Person.find({}).then(persons => {
