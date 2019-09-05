@@ -1,9 +1,6 @@
 const mongoose = require('mongoose')
 
-// const url = process.env.MONGODB_URI 
-
-const url = `mongodb+srv://fullstack:lasana12@cluster0-usmgv.mongodb.net/test?retryWrites=true`
-
+const url = process.env.MONGODB_URI 
 mongoose.connect(url, { useNewUrlParser: true })
   .then(() => console.log('connected to MongoDB'))
   .catch(error => console.log('error connecting to MongoDB:', error.message))
